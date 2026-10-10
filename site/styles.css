@@ -764,3 +764,17 @@ footer { background: var(--navy-deep); color: #C9D6F2; padding: 60px 0 26px; }
   .cta-band { padding: 32px; flex-direction: column; align-items: flex-start; }
   .foot-grid { grid-template-columns: 1fr; }
 }
+
+
+/* ---------- Inline icons (SVG replacements for the former emoji glyphs) ---------- */
+.ic {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex: none;
+  vertical-align: -0.125em;
+}
+.card .icon .ic { width: 22px; height: 22px; }
+.project-card .flag .ic { width: 20px; height: 20px; }
+.status-note .ic { width: 17px; height: 17px; margin-top: 1px; }
+.fmt { display: inline-flex; align-items: center; gap: 5px; }
