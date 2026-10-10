@@ -778,3 +778,151 @@ footer { background: var(--navy-deep); color: #C9D6F2; padding: 60px 0 26px; }
 .project-card .flag .ic { width: 20px; height: 20px; }
 .status-note .ic { width: 17px; height: 17px; margin-top: 1px; }
 .fmt { display: inline-flex; align-items: center; gap: 5px; }
+
+
+/* ---------- Motion & interaction polish ---------- */
+@keyframes hf-rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes hf-shimmer {
+  0% { transform: translateX(-130%); }
+  60%, 100% { transform: translateX(130%); }
+}
+@keyframes hf-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 144, 240, .45); }
+  70% { box-shadow: 0 0 0 7px rgba(0, 144, 240, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 144, 240, 0); }
+}
+
+/* Hero entrance: staggered rise on load */
+.hero-inner > * { animation: hf-rise .65s cubic-bezier(.2, .7, .3, 1) both; }
+.hero-inner > *:nth-child(2) { animation-delay: .07s; }
+.hero-inner > *:nth-child(3) { animation-delay: .14s; }
+.hero-inner > *:nth-child(4) { animation-delay: .21s; }
+.hero-inner > *:nth-child(5) { animation-delay: .28s; }
+.hero-inner > *:nth-child(6) { animation-delay: .35s; }
+.hero-inner > *:nth-child(7) { animation-delay: .42s; }
+
+/* Headline gradient (applied only where background-clip:text is supported) */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero h1 {
+    background: linear-gradient(92deg, var(--navy) 0%, var(--blue-text) 58%, var(--blue-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* Date pill: soft shimmer sweep */
+.pill { position: relative; overflow: hidden; }
+.pill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 32%, rgba(255, 255, 255, .75) 50%, transparent 68%);
+  transform: translateX(-130%);
+  animation: hf-shimmer 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Scroll reveal (only armed when the motion script runs) */
+.js-motion .reveal {
+  opacity: 0;
+  translate: 0 22px;
+  transition:
+    opacity .55s ease var(--d, 0ms),
+    translate .55s cubic-bezier(.2, .7, .3, 1) var(--d, 0ms),
+    transform .2s ease,
+    box-shadow .2s ease,
+    border-color .2s ease;
+}
+.js-motion .reveal.is-visible { opacity: 1; translate: 0 0; }
+
+/* Card / tile hovers */
+.card, .stat, .skill-row, .org-pool .item, .partner-card {
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+a.card:hover { border-color: var(--blue); }
+.stat:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--tint-strong); }
+.skill-row:hover { transform: translateX(4px); border-color: var(--tint-strong); }
+.org-pool a.item:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+/* Buttons: lift + glow (press re-asserted so it still wins after hover) */
+.btn {
+  transition:
+    background .15s ease, color .15s ease, border-color .15s ease,
+    transform .15s ease, box-shadow .2s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-solid:hover { box-shadow: 0 10px 22px rgba(0, 102, 192, .28); }
+.btn-outline:hover { box-shadow: 0 10px 22px rgba(27, 63, 143, .18); }
+.btn:active { transform: translateY(1px); }
+
+/* Nav links: growing underline */
+.nav-links a { position: relative; }
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -7px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--blue);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform .2s ease;
+}
+.nav-links a:hover::after,
+.nav-links a:focus-visible::after { transform: scaleX(1); }
+
+/* Chips */
+.chip { transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease; }
+a.chip:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+/* Roadmap: gradient rail, popping dots */
+.roadmap::before { background: linear-gradient(90deg, var(--tint-strong), var(--blue), var(--tint-strong)); }
+.step .dot {
+  transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease, color .2s ease;
+}
+.step:hover .dot { transform: scale(1.12); box-shadow: 0 8px 18px rgba(27, 63, 143, .22); }
+.step.is-final:hover .dot { box-shadow: 0 8px 18px rgba(27, 63, 143, .35); }
+
+/* Programme weeks: hover tint, animated open */
+.week summary { transition: background-color .15s ease; }
+.week summary:hover { background: var(--surface); }
+.week summary:hover .chevron { border-color: var(--blue); color: var(--blue-text); }
+.week[open] .week-body { animation: hf-rise .4s ease both; }
+
+/* Schedule tables: row highlight */
+tbody tr { transition: background-color .15s ease; }
+tbody tr:hover { background-color: var(--tint); }
+
+/* Awards: pulsing accent dot */
+.award .dot2 { animation: hf-pulse 2.6s ease-out infinite; }
+
+/* Reading progress bar under the sticky nav */
+.nav::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: var(--scroll, 0%);
+  height: 2px;
+  background: linear-gradient(90deg, var(--blue), var(--blue-2));
+  pointer-events: none;
+}
+
+/* Small link transitions */
+.project-card a.name, .foot-col a, .foot-bottom a { transition: color .15s ease; }
+
+/* Mobile: skip the nav underline (rows are full-width there) */
+@media (max-width: 880px) {
+  .nav-links a::after { display: none; }
+}
+
+/* Reduced motion: no loops, content always shown */
+@media (prefers-reduced-motion: reduce) {
+  .pill::after, .award .dot2, .hero-inner > *, .week[open] .week-body { animation: none !important; }
+  .js-motion .reveal { opacity: 1 !important; translate: none !important; }
+}

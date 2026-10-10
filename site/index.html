@@ -819,6 +819,40 @@
 })();
 </script>
 <script src="i18n.js"></script>
+<script>
+// Motion: scroll-reveal + reading progress (skipped when IntersectionObserver is unavailable)
+(function () {
+  var doc = document.documentElement;
+  if (!('IntersectionObserver' in window)) return;
+  doc.classList.add('js-motion');
+  var revealables = document.querySelectorAll('.section-head, .step, .stat, .card, .week, .org-pool .item, .skill-row, .award, .partner-card, .cta-band, .sprint, .status-note');
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+  revealables.forEach(function (el, i) {
+    el.classList.add('reveal');
+    el.style.setProperty('--d', ((i % 5) * 70) + 'ms');
+    io.observe(el);
+  });
+  var ticking = false;
+  function updateProgress() {
+    ticking = false;
+    var max = doc.scrollHeight - window.innerHeight;
+    var pct = max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0;
+    doc.style.setProperty('--scroll', pct + '%');
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) { ticking = true; window.requestAnimationFrame(updateProgress); }
+  }, { passive: true });
+  updateProgress();
+})();
+</script>
+
 
 </body>
 </html>
