@@ -975,6 +975,9 @@ tbody tr:hover { background-color: var(--tint); }
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
   [data-theme="dark"] .hero h1 {
     background: linear-gradient(92deg, #F2F6FF 0%, #8FC2FF 55%, #5F86FF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 }
 
